@@ -1,6 +1,7 @@
 NAME = push_swap
 
-SOURCE = helpers.c also_helpers.c
+SOURCE = helpers.c also_helpers.c rotate.c reverse_rotate.c sorting.c \
+	also_sorting.c main.c else.c else_2.c
 
 OBJECTS = $(SOURCE:.c=.o)
 
