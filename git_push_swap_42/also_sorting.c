@@ -83,14 +83,13 @@ void sort_five(t_stack *a, t_stack *b)
 
 int get_index_of_value(t_stack *stack, int value)
 {
-    int i;
+    int i = 0;  // Start from the bottom (position 0)
 
-    i = stack->top;
-    while (i >= 0)
+    while (i < stack->size)  // Loop from bottom to top
     {
         if (stack->array[i] == value)
-            return i;
-        i--;
+            return i;  // Return the index of the value found
+        i++;
     }
-    return -1;
+    return -1;  // Return -1 if the value is not found
 }

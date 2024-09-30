@@ -34,8 +34,8 @@ int	main(int argc, char **argv)
 	if (!is_sorted(a))
 	{
 		simple_min_max_sort(a, b);
-		free_stack(a);
-		free_stack(b);
 	}
+	free_stack(a);
+	free_stack(b);
 	return (0);
 }
