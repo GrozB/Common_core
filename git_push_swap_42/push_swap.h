@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 11:14:40 by bgroz             #+#    #+#             */
-/*   Updated: 2024/09/24 18:47:25 by marvin           ###   ########.fr       */
+/*   Updated: 2024/09/29 21:57:11 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,28 @@ int	is_sorted(t_stack *a);
 int	find_max_position(t_stack *b, int max_value);
 void	quicksort_push_swap(t_stack *a, t_stack *b);
 void	sort_large(t_stack *a, t_stack *b);
-void	rotate_to_top(t_stack *a, int value);
+void	rotate_to_top_a(t_stack *a, int value);
+void	rotate_to_top_b(t_stack *b, int value);
 void	simple_min_max_sort(t_stack *a, t_stack *b);
 int get_index_of_value(t_stack *stack, int value);
 void	sort_stack_by_size(t_stack *a, t_stack *b);
+int calculate_rotations(int index, int size);
+int	find_next_min_value(t_stack *stack);
+int	find_next_max_value(t_stack *stack);
+int find_cheapest_number(t_stack *a, t_stack *b);
+int	find_position_in_b(t_stack *b, int num);
+int find_position_in_a(t_stack *a, int num);
+int calculate_total_operations(int rotations_a, int rotations_b);
+void radix_sort(t_stack *a);
+void counting_sort(t_stack *a, int exp);
+int get_max_value(t_stack *stack);
+void insertion_sort(t_stack *a);
+int find_median(t_stack *a);
+int compare_int(const void *a, const void *b);
+void quick_sort_stack(t_stack *a, t_stack *b);
+void bubble_sort_rec(int *arr, int n);
+void print_stack(t_stack *stack);
+int calculate_position_in_a(t_stack *a, int value);
+void rotate_to_position_a(t_stack *a, int position);
 
 #endif
