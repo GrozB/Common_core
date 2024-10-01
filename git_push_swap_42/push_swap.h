@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 11:14:40 by bgroz             #+#    #+#             */
-/*   Updated: 2024/09/29 21:57:11 by marvin           ###   ########.fr       */
+/*   Updated: 2024/10/01 18:55:38 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,5 +82,9 @@ void bubble_sort_rec(int *arr, int n);
 void print_stack(t_stack *stack);
 int calculate_position_in_a(t_stack *a, int value);
 void rotate_to_position_a(t_stack *a, int position);
+void push_chunk_to_b(t_stack *a, t_stack *b, int chunk_min, int chunk_max);
+void	chunk_sort(t_stack *a, t_stack *b);
+int find_nth_smallest(t_stack *a, int n);
+
 
 #endif

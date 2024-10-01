@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   min_value.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/18 19:43:00 by marvin            #+#    #+#             */
-/*   Updated: 2024/09/18 19:43:00 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "push_swap.h"
 
 int find_min_value(t_stack *stack)
@@ -94,6 +82,53 @@ void rotate_to_top(t_stack *stack, int value)
 
 void simple_min_max_sort(t_stack *a, t_stack *b)
 {
+    int k = 0;
+    int l;
+	int	i;
+	int	size;
+	int max_value;
+
+	i = 0;
+    while (k <= 5)
+    {
+		i = 0;
+        l = find_nth_smallest(a, 20);
+		while (a->array[i] != a->array[a->top])
+			i++;
+        while (i > 0)
+        {
+            if (a->array[0] <= l)
+            {
+                pb(a, b);
+            }
+            else
+            {
+                ra(a);
+            }
+			i--;
+        }
+		k++;
+    }
+	size = a->size;
+	while(size > 0)
+	{
+		pb(a, b);
+		size--;
+	}
+	max_value = find_max_value(b);
+	printf("max value:%d", max_value);
+	while (b->array[0] != max_value)
+	{
+		rb(b);
+	}
+	printf("b->array[0]:%d", b->array[0]);
+	print_stack(b);
+	pa(a,b);
+	print_stack(b);
+}
+/*
+void simple_min_max_sort(t_stack *a, t_stack *b)
+{
     int min_rotations;
     int max_rotations;
     int next_min_rotations;
@@ -172,7 +207,7 @@ void simple_min_max_sort(t_stack *a, t_stack *b)
         ra(a);
         counter--;
     }
-}
+}*/
 /*
 void simple_min_max_sort(t_stack *a, t_stack *b)
 {
