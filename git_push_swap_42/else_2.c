@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   else_2.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/24 18:46:03 by marvin            #+#    #+#             */
-/*   Updated: 2024/09/24 18:46:03 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "push_swap.h"
 
 void sort_stack_by_size(t_stack *a, t_stack *b)
@@ -124,14 +112,12 @@ int calculate_position_in_a(t_stack *a, int value)
 {
     int i = 0;
 
-    // Traverse stack A to find the correct position where value should be placed
-    while (i < a->size)
     {
         if (a->array[i] > value)
-            return i;  // Return the position where value should be inserted
+            return i;
         i++;
     }
-    return 0;  // Return 0 if value is smaller than all elements in A
+    return 0;
 }
 
 void rotate_to_position_a(t_stack *a, int position)
@@ -140,8 +126,6 @@ void rotate_to_position_a(t_stack *a, int position)
 
     if (position <= half_size)
     {
-        // Rotate forward (ra) to bring position to the top
-        while (position > 0)
         {
             ra(a);
             position--;
@@ -149,11 +133,33 @@ void rotate_to_position_a(t_stack *a, int position)
     }
     else
     {
-        // Rotate backward (rra) to bring position to the top
         while (position < a->size)
         {
             rra(a);
             position++;
         }
     }
+}
+
+int find_nth_smallest(t_stack *a, int n)
+{
+    int i;
+    int j = 0;
+    int current_smallest;
+    int nth_smallest = find_min_value(a);
+
+    while (j < n - 1)
+    {
+        current_smallest = find_max_value(a);
+        i = 0;
+        while (i <= a->size)
+        {
+            if (a->array[i] > nth_smallest && a->array[i] < current_smallest)
+                current_smallest = a->array[i];
+            i++;
+        }
+        nth_smallest = current_smallest;
+        j++;
+    }
+    return nth_smallest;
 }

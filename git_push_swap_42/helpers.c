@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   helpers.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/03 12:30:34 by bgroz             #+#    #+#             */
-/*   Updated: 2024/09/24 18:33:29 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "push_swap.h"
 
 t_stack	*stack_size(int size)
@@ -42,10 +30,19 @@ void	free_stack(t_stack *stack)
 
 int	push(t_stack *stack, int value)
 {
+	int	i = stack->size;
+
 	if (stack->top >= stack->max_size - 1)
+	{
 		return (-1);
+	}
 	stack->top++;
-	stack->array[stack->top] = value;
+	while (0 < i)
+	{
+		stack->array[i] = stack->array[i - 1];
+		i--;
+	}
+	stack->array[0] = value;
 	stack->size++;
 	return (0);
 }

@@ -35,9 +35,7 @@ void sort_three(t_stack *a)
 void sort_four(t_stack *a, t_stack *b)
 {
 	int min_value;
-	//int remaining_size;
 
-	//remaining_size = a->size;
 	if (!is_sorted(a))
 	{
 		min_value = find_min_value(a);
@@ -55,7 +53,6 @@ void sort_four(t_stack *a, t_stack *b)
 void sort_five(t_stack *a, t_stack *b)
 {
 	int min_value;
-	//int	remaining_size = a->size;
 
 	if (!is_sorted(a))
 	{
@@ -65,14 +62,12 @@ void sort_five(t_stack *a, t_stack *b)
 		if (!is_sorted(a))
 		{
 			pb(a, b);
-			//remaining_size--;
 			min_value = find_min_value(a);
 			while (a->array[0] != min_value)
 				ra(a);
 			if (!is_sorted(a))
 			{
 				pb(a, b);
-				//remaining_size--;
 				sort_three(a);
 				pa(a, b);
 			}
@@ -83,13 +78,13 @@ void sort_five(t_stack *a, t_stack *b)
 
 int get_index_of_value(t_stack *stack, int value)
 {
-    int i = 0;  // Start from the bottom (position 0)
+    int i = 0;
 
-    while (i < stack->size)  // Loop from bottom to top
+    while (i < stack->size)
     {
         if (stack->array[i] == value)
-            return i;  // Return the index of the value found
+            return i;
         i++;
     }
-    return -1;  // Return -1 if the value is not found
+    return -1;
 }

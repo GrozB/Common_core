@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   sorting.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bgroz <bgroz@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/13 14:44:28 by bgroz            #+#    #+#             */
-/*   Updated: 2024/09/13 14:44:28 by bgroz           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "push_swap.h"
 
 int	find_max_value(t_stack *stack)
@@ -19,7 +7,7 @@ int	find_max_value(t_stack *stack)
 
 	max_value = stack->array[0];
 	i = 0;
-	while (i <= stack->top)
+	while (i <= stack->size)
 	{
 		if (stack->array[i] > max_value)
 			max_value = stack->array[i];
@@ -27,7 +15,7 @@ int	find_max_value(t_stack *stack)
 	}
 	return (max_value);
 }
-
+/*
 void push_back_to_a(t_stack *a, t_stack *b)
 {
     while (b->size > 0)
@@ -67,4 +55,4 @@ void copy_stack_to_array(t_stack *stack, int *arr)
 		arr[i] = stack->array[i];
 		i++;
 	}
-}
+}*/

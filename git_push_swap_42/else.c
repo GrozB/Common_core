@@ -85,7 +85,7 @@ void simple_min_max_sort(t_stack *a, t_stack *b)
     int k = 0;
     int l;
 	int	i;
-	int	size;
+	int	max_value_pos;
 	int max_value;
 
 	i = 0;
@@ -109,22 +109,19 @@ void simple_min_max_sort(t_stack *a, t_stack *b)
         }
 		k++;
     }
-	size = a->size;
-	while(size > 0)
+	while (b->size > 0)
 	{
-		pb(a, b);
-		size--;
+		max_value = find_max_value(b);
+		max_value_pos = calculate_rotations(get_index_of_value(b, max_value), b->size);
+		while (b->array[0] != max_value)
+		{
+			if (max_value_pos > b->size)
+				rb(b);
+			else
+				rrb(b);
+		}
+		pa(a,b);
 	}
-	max_value = find_max_value(b);
-	printf("max value:%d", max_value);
-	while (b->array[0] != max_value)
-	{
-		rb(b);
-	}
-	printf("b->array[0]:%d", b->array[0]);
-	print_stack(b);
-	pa(a,b);
-	print_stack(b);
 }
 /*
 void simple_min_max_sort(t_stack *a, t_stack *b)
