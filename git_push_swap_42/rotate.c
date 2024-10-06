@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rotate.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/28 18:26:03 by bgroz             #+#    #+#             */
+/*   Updated: 2024/10/06 21:50:11 by marvin           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
 void	rotate(t_stack *stack)
@@ -34,4 +46,18 @@ void	rr(t_stack *a, t_stack *b)
 	rotate(a);
 	rotate(b);
 	printf("rr\n");
+}
+
+void rotate_b_to_top(t_stack *b, int max_value, int max_value_pos)
+{
+	if (max_value_pos <= b->size / 2)
+	{
+		while (b->array[0] != max_value)
+			rb(b);
+	}
+	else
+	{
+		while (b->array[0] != max_value)
+			rrb(b);
+	}
 }

@@ -13,14 +13,12 @@ int	main(int argc, char **argv)
 	b = stack_size(argc - 1);
 	if (!a || !b)
 		return (free_stack(a), free_stack(b), 1);
-	i = argc -1;
+	i = argc - 1;
 	while (i > 0)
 	{
 		value = ft_atoi(argv[i--]);
-		printf("argv[i + 1]:%s value%d\n", argv[i + 1], value);
 		push(a, value);
 	}
-	print_stack(a);
 	if (!is_sorted(a))
 	{
 		simple_min_max_sort(a, b);

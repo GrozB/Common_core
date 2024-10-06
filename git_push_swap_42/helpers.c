@@ -30,8 +30,9 @@ void	free_stack(t_stack *stack)
 
 int	push(t_stack *stack, int value)
 {
-	int	i = stack->size;
+	int	i;
 
+	i = stack->size;
 	if (stack->top >= stack->max_size - 1)
 	{
 		return (-1);

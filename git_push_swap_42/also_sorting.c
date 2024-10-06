@@ -2,18 +2,24 @@
 
 void sort_two(t_stack *a)
 {
-	int top = a->array[a->top - 1];
-	int bot = a->array[a->top];
+	int top;
+	int bot;
+
+	top = a->array[a->top - 1];
+	bot = a->array[a->top];
 	if (top > bot)
 		sa(a);
 }
 
 void sort_three(t_stack *a)
 {
-	int top = a->array[a->top - 2];
-	int mid = a->array[a->top - 1];
-	int bot = a->array[a->top];
+	int top;
+	int mid;
+	int bot;
 
+	top = a->array[a->top - 2];
+	mid = a->array[a->top - 1];
+	bot = a->array[a->top];
 	if (top > mid && mid > bot) // 3 2 1
 	{
 		sa(a);
@@ -78,13 +84,14 @@ void sort_five(t_stack *a, t_stack *b)
 
 int get_index_of_value(t_stack *stack, int value)
 {
-    int i = 0;
+    int i;
 
+	i = 0;
     while (i < stack->size)
     {
         if (stack->array[i] == value)
             return i;
         i++;
     }
-    return -1;
+    return (-1);
 }

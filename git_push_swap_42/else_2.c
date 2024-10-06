@@ -45,6 +45,7 @@ int find_next_min_value(t_stack *stack)
     return next_min_value;
 }
 
+
 int find_next_max_value(t_stack *stack)
 {
     int first_max_value = find_max_value(stack);
@@ -60,85 +61,6 @@ int find_next_max_value(t_stack *stack)
         i--;
     }
     return next_max_value;
-}
-
-void bubble_sort_rec(int *arr, int n)
-{
-    if (n == 1)
-        return;
-
-    int i = 0;
-    while (i < n - 1)
-    {
-        if (arr[i] > arr[i + 1])
-        {
-            int temp = arr[i];
-            arr[i] = arr[i + 1];
-            arr[i + 1] = temp;
-        }
-        i++;
-    }
-    bubble_sort_rec(arr, n - 1);
-}
-
-int find_median(t_stack *a)
-{
-    int sorted[a->size];
-    int i = 0;
-	
-    while (i < a->size)
-    {
-        sorted[i] = a->array[i];
-        i++;
-    }
-    bubble_sort_rec(sorted, a->size);
-    return sorted[a->size / 2];
-}
-
-void print_stack(t_stack *stack)
-{
-    int i = 0;
-
-    printf("Stack (size %d): ", stack->size);
-    while (i < stack->size)
-    {
-        printf("%d ", stack->array[i]);
-        i++;
-    }
-    printf("\n");
-}
-
-int calculate_position_in_a(t_stack *a, int value)
-{
-    int i = 0;
-
-    {
-        if (a->array[i] > value)
-            return i;
-        i++;
-    }
-    return 0;
-}
-
-void rotate_to_position_a(t_stack *a, int position)
-{
-    int half_size = a->size / 2;
-
-    if (position <= half_size)
-    {
-        {
-            ra(a);
-            position--;
-        }
-    }
-    else
-    {
-        while (position < a->size)
-        {
-            rra(a);
-            position++;
-        }
-    }
 }
 
 int find_nth_smallest(t_stack *a, int n)
