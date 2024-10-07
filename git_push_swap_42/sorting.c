@@ -3,44 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   sorting.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bgroz <bgroz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/13 14:44:28 by bgroz            #+#    #+#             */
-/*   Updated: 2024/09/13 14:44:28 by bgroz           ###   ########.fr       */
+/*   Created: 2024/10/07 17:25:08 by bgroz             #+#    #+#             */
+/*   Updated: 2024/10/07 19:15:27 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	find_max_value(t_stack *stack)
-{
-	int i;
-	int max_value;
-
-	max_value = stack->array[0];
-	i = 0;
-	while (i <= stack->top)
-	{
-		if (stack->array[i] > max_value)
-			max_value = stack->array[i];
-		i++;
-	}
-	return (max_value);
-}
-
-void copy_stack_to_array(t_stack *stack, int *arr)
-{
-	int i;
-
-	i = 0;
-	while (i <= stack->top)
-	{
-		arr[i] = stack->array[i];
-		i++;
-	}
-}
-
-void push_chunk(t_stack *a, t_stack *b, int limit, int i)
+void	push_chunk(t_stack *a, t_stack *b, int limit, int i)
 {
 	while (i > 0)
 	{
@@ -52,10 +24,10 @@ void push_chunk(t_stack *a, t_stack *b, int limit, int i)
 	}
 }
 
-void push_chunks_to_b(t_stack *a, t_stack *b, int chunk_size)
+void	push_chunks_to_b(t_stack *a, t_stack *b, int chunk_size)
 {
-	int k;
-	int limit;
+	int	k;
+	int	limit;
 
 	k = 0;
 	while (k <= 5)
@@ -66,10 +38,10 @@ void push_chunks_to_b(t_stack *a, t_stack *b, int chunk_size)
 	}
 }
 
-void push_b_to_a(t_stack *a, t_stack *b)
+void	push_b_to_a(t_stack *a, t_stack *b)
 {
-	int max_value;
-	int max_value_pos;
+	int	max_value;
+	int	max_value_pos;
 
 	while (b->size > 0)
 	{
@@ -78,4 +50,41 @@ void push_b_to_a(t_stack *a, t_stack *b)
 		rotate_b_to_top(b, max_value, max_value_pos);
 		pa(a, b);
 	}
+}
+
+int	has_duplicate(t_stack *stack, int value)
+{
+	int	i;
+	
+	i = 0;
+	while (i < stack->size)
+	{
+		if (stack->array[i] == value)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	is_in_int_range(const char *str)
+{
+	int sign = 1;
+	long result = 0;
+
+	if (*str == '-' || *str == '+')
+	{
+		if (*str == '-')
+			sign = -1;
+		str++;
+	}
+	while (*str)
+	{
+		if (*str < '0' || *str > '9')
+			return (0);
+		result = result * 10 + (*str - '0');
+		if ((sign == 1 && result > INT_MAX) || (sign == -1 && -result < INT_MIN))
+			return (0);
+		str++;
+	}
+	return (1);
 }

@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   also_sorting.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/07 17:24:23 by bgroz             #+#    #+#             */
+/*   Updated: 2024/10/07 17:33:11 by bgroz            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
-void sort_two(t_stack *a)
+void	sort_two(t_stack *a)
 {
-	int top;
-	int bot;
+	int	top;
+	int	bot;
 
 	top = a->array[a->top - 1];
 	bot = a->array[a->top];
@@ -11,36 +23,36 @@ void sort_two(t_stack *a)
 		sa(a);
 }
 
-void sort_three(t_stack *a)
+void	sort_three(t_stack *a)
 {
-	int top;
-	int mid;
-	int bot;
+	int	top;
+	int	mid;
+	int	bot;
 
 	top = a->array[a->top - 2];
 	mid = a->array[a->top - 1];
 	bot = a->array[a->top];
-	if (top > mid && mid > bot) // 3 2 1
+	if (top > mid && mid > bot)
 	{
 		sa(a);
 		rra(a);
 	}
-	else if (top > mid && mid < bot && top < bot) //2 1 3
+	else if (top > mid && mid < bot && top < bot)
 		sa(a);
-	else if (top > mid && mid < bot && top > bot) //3 1 2
+	else if (top > mid && mid < bot && top > bot)
 		ra(a);
-	else if (top < mid && mid > bot && top > bot) //2 3 1
+	else if (top < mid && mid > bot && top > bot)
 		rra(a);
-	else if (top < mid && mid > bot && top < bot) //1 3 2
+	else if (top < mid && mid > bot && top < bot)
 	{
 		rra(a);
 		sa(a);
 	}
 }
 
-void sort_four(t_stack *a, t_stack *b)
+void	sort_four(t_stack *a, t_stack *b)
 {
-	int min_value;
+	int	min_value;
 
 	if (!is_sorted(a))
 	{
@@ -56,9 +68,9 @@ void sort_four(t_stack *a, t_stack *b)
 	}
 }
 
-void sort_five(t_stack *a, t_stack *b)
+void	sort_five(t_stack *a, t_stack *b)
 {
-	int min_value;
+	int	min_value;
 
 	if (!is_sorted(a))
 	{
@@ -82,16 +94,16 @@ void sort_five(t_stack *a, t_stack *b)
 	}
 }
 
-int get_index_of_value(t_stack *stack, int value)
+int	get_index_of_value(t_stack *stack, int value)
 {
-    int i;
+	int	i;
 
 	i = 0;
-    while (i < stack->size)
-    {
-        if (stack->array[i] == value)
-            return i;
-        i++;
-    }
-    return (-1);
+	while (i < stack->size)
+	{
+		if (stack->array[i] == value)
+			return (i);
+		i++;
+	}
+	return (-1);
 }

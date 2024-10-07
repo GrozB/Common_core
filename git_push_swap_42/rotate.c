@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rotate.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 18:26:03 by bgroz             #+#    #+#             */
-/*   Updated: 2024/10/06 21:50:11 by marvin           ###   ########.fr       */
+/*   Updated: 2024/10/07 17:30:32 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,23 +32,23 @@ void	rotate(t_stack *stack)
 void	ra(t_stack *a)
 {
 	rotate(a);
-	printf("ra\n");
+	ft_printf("ra\n");
 }
 
 void	rb(t_stack *b)
 {
 	rotate(b);
-	printf("rb\n");
+	ft_printf("rb\n");
 }
 
 void	rr(t_stack *a, t_stack *b)
 {
 	rotate(a);
 	rotate(b);
-	printf("rr\n");
+	ft_printf("rr\n");
 }
 
-void rotate_b_to_top(t_stack *b, int max_value, int max_value_pos)
+void	rotate_b_to_top(t_stack *b, int max_value, int max_value_pos)
 {
 	if (max_value_pos <= b->size / 2)
 	{

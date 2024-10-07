@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:43:20 by bgroz             #+#    #+#             */
-/*   Updated: 2024/07/03 15:57:05 by bgroz            ###   ########.fr       */
+/*   Updated: 2024/10/07 17:44:55 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 #include <bsd/string.h>
 #include "libft.h"
 
-int static ft_strlenn(const char *str)
+int	static	ft_strlenn(const char *str)
 {
 	int	i;
 
 	i = 0;
-	while(str)
+	while (str)
 		i++;
 	return (i);
 }

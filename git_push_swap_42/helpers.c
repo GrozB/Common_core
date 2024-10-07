@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   helpers.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/07 17:24:32 by bgroz             #+#    #+#             */
+/*   Updated: 2024/10/07 17:27:47 by bgroz            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
 t_stack	*stack_size(int size)
@@ -48,23 +60,23 @@ int	push(t_stack *stack, int value)
 	return (0);
 }
 
-int pop(t_stack *stack, int *value)
+int	pop(t_stack *stack, int *value)
 {
-    int i;
+	int	i;
 
 	if (stack->top < 0)
 		return (-1);
-    if (value != NULL)
-        *value = stack->array[0];
-    i = 0;
-    while (i < stack->top)
-    {
-        stack->array[i] = stack->array[i + 1];
-        i++;
-    }
-    stack->top--;
+	if (value != NULL)
+		*value = stack->array[0];
+	i = 0;
+	while (i < stack->top)
+	{
+		stack->array[i] = stack->array[i + 1];
+		i++;
+	}
+	stack->top--;
 	stack->size--;
-    return 0;
+	return (0);
 }
 
 int	is_empty(t_stack *stack)
