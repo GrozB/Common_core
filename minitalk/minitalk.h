@@ -7,8 +7,8 @@
 # include <stdio.h>
 # include "libft/libft.h"
 
-// Function prototypes
-void send_char(pid_t pid, char c);
-void handle_signal(int sig);
+void	send_bit(pid_t pid, char c);
+void	handle_signal(int sig);
+
 
 #endif

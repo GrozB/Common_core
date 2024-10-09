@@ -1,41 +1,45 @@
 #include "minitalk.h"
 
-void ft_handle_signal(int signum, siginfo_t *info, void *context)
+void	handle_signal(int sig)
 {
-	static unsigned char character = 0;
-	static int    bit_count = 0;
-	static pid_t   client_pid = 0;
+	static int	bit_count = 0;
+	static char	c = 0;
 
-	(void)context;
-	if (client_pid != info->si_pid)
-	{
-	bit_count = 0;
-	character = 0;
-	}
-	client_pid = info->si_pid;
-	character = character << 1;
-	if (signum == SIGUSR1)
-	character = character | 1;
+	c <<= 1;
+	if (sig == SIGUSR1)
+		c |= 1;
 	bit_count++;
 	if (bit_count == 8)
 	{
-	write(1, &character, 1);
-	bit_count = 0;
-	character = 0;
+		if (c != '\0')
+			write(1, &c, 1);
+		bit_count = 0;
+		c = 0;
 	}
-	kill(client_pid, SIGUSR2);
 }
 
-int main(void)
+int	main(void)
 {
-	struct sigaction sa;
+	pid_t	pid;
+	char	pid_str[20];
+	int		i;
+	int		n;
 
-	printf("Server PID: %d\n", getpid());
-	sa.sa_sigaction = &ft_handle_signal;
-	sa.sa_flags = SA_SIGINFO;
-	sigaction(SIGUSR1, &sa, NULL);
-	sigaction(SIGUSR2, &sa, NULL);
+	pid = getpid();
+	write(1, "Server PID: ", 12);
+	n = pid;
+	i = 0;
+	while (n > 0)
+	{
+		pid_str[i++] = (n % 10) + '0';
+		n /= 10;
+	}
+	while (i--)
+		write(1, &pid_str[i], 1);
+	write(1, "\n", 1);
+	signal(SIGUSR1, handle_signal);
+	signal(SIGUSR2, handle_signal);
 	while (1)
-		;
+		pause();
 	return (0);
 }
