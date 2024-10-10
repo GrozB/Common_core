@@ -3,25 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:43:20 by bgroz             #+#    #+#             */
-/*   Updated: 2024/09/18 19:48:02 by marvin           ###   ########.fr       */
+/*   Updated: 2024/10/07 17:44:55 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <stddef.h>
-//#include <bsd/string.h>
-#include <string.h>
+#include <bsd/string.h>
 #include "libft.h"
 
-static int ft_strlenn(const char *str)
+int	static	ft_strlenn(const char *str)
 {
 	int	i;
 
 	i = 0;
-	while(str)
+	while (str)
 		i++;
 	return (i);
 }
