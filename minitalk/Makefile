@@ -1,8 +1,8 @@
 NAME_SERVER = server
 NAME_CLIENT = client
 
-SOURCE_SERVER = server.c
-SOURCE_CLIENT = client.c
+SOURCE_SERVER = server.c helpers.c
+SOURCE_CLIENT = client.c helpers.c
 
 OBJECTS_SERVER = $(SOURCE_SERVER:.c=.o)
 OBJECTS_CLIENT = $(SOURCE_CLIENT:.c=.o)
