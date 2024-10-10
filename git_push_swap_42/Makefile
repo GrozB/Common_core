@@ -1,7 +1,7 @@
 NAME = push_swap
 
 SOURCE = helpers.c also_helpers.c rotate.c reverse_rotate.c sorting.c \
-	also_sorting.c main.c else.c else_2.c
+	also_sorting.c main.c else.c else_2.c lonely.c
 
 OBJECTS = $(SOURCE:.c=.o)
 
@@ -27,7 +27,7 @@ $(LIBFT):
 %.o: %.c
 	-cc $(CFLAGS) -c $< -o $(<:.c=.o) 
 
-clean: 
+clean:
 	$(MAKE) -C $(LIBFT_DIR) clean
 	$(MAKE) -C $(FT_PRINTF_DIR) clean
 	rm -f $(OBJECTS)

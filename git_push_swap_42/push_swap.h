@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 11:14:40 by bgroz             #+#    #+#             */
-/*   Updated: 2024/10/07 19:15:50 by bgroz            ###   ########.fr       */
+/*   Updated: 2024/10/10 19:55:32 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,9 @@ int		is_number(char *str);
 void	validate_and_push(t_stack *a, t_stack *b, int argc, char **argv);
 int		has_duplicate(t_stack *stack, int value);
 int		is_in_int_range(const char *str);
+void	free_split(char **split_args);
+void	process_values(t_stack *a, t_stack *b, char **values);
+void	initialize_stacks(t_stack **a, t_stack **b, int argc, char **argv);
+void	initialize_stack_size(t_stack **a, t_stack **b, int size);
 
 #endif

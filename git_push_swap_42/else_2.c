@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 17:24:27 by bgroz             #+#    #+#             */
-/*   Updated: 2024/10/07 17:40:09 by bgroz            ###   ########.fr       */
+/*   Updated: 2024/10/10 19:53:32 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	sort_stack_by_size(t_stack *a, t_stack *b)
 {
+	if (a->size == 1)
+		return ;
 	if (a->size == 2)
 		sort_two(a);
 	else if (a->size == 3)
@@ -37,48 +39,6 @@ int	calculate_rotations(int index, int size)
 		rotations = -(size - index);
 	}
 	return (rotations);
-}
-
-int	find_next_min_value(t_stack *stack)
-{
-	int	first_min_value;
-	int	i;
-	int	next_min_value;
-
-	first_min_value = find_min_value(stack);
-	i = stack->top;
-	next_min_value = stack->array[stack->top];
-	while (i >= 0)
-	{
-		if (stack->array[i] > first_min_value
-			&& stack->array[i] < next_min_value)
-		{
-			next_min_value = stack->array[i];
-		}
-		i--;
-	}
-	return (next_min_value);
-}
-
-int	find_next_max_value(t_stack *stack)
-{
-	int	first_max_value;
-	int	i;
-	int	next_max_value;
-
-	first_max_value = find_max_value(stack);
-	i = stack->top;
-	next_max_value = stack->array[stack->top];
-	while (i >= 0)
-	{
-		if (stack->array[i] < first_max_value
-			&& stack->array[i] > next_max_value)
-		{
-			next_max_value = stack->array[i];
-		}
-		i--;
-	}
-	return (next_max_value);
 }
 
 int	find_nth_smallest(t_stack *a, int n)
@@ -105,4 +65,44 @@ int	find_nth_smallest(t_stack *a, int n)
 		j++;
 	}
 	return (nth_smallest);
+}
+
+void	initialize_stacks(t_stack **a, t_stack **b, int argc, char **argv)
+{
+	char	**values;
+	int		size;
+
+	if (argc == 2 && is_number(argv[1]))
+	{
+		values = ft_split(argv[1], ' ');
+		if (!values)
+			print_error_and_exit(*a, *b);
+		size = 0;
+		while (values[size])
+			size++;
+		initialize_stack_size(a, b, size);
+		process_values(*a, *b, values);
+		free_split(values);
+	}
+	else
+	{
+		initialize_stack_size(a, b, argc - 1);
+		process_values(*a, *b, &argv[1]);
+	}
+}
+
+void	process_values(t_stack *a, t_stack *b, char **values)
+{
+	int	i;
+
+	i = 0;
+	while (values[i])
+	{
+		if (!is_in_int_range(values[i]) || has_duplicate(a, ft_atoi(values[i])))
+			print_error_and_exit(a, b);
+		a->array[i] = ft_atoi(values[i]);
+		i++;
+		a->size++;
+	}
+	a->top = i - 1;
 }

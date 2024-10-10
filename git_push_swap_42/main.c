@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 17:24:36 by bgroz             #+#    #+#             */
-/*   Updated: 2024/10/07 19:18:09 by bgroz            ###   ########.fr       */
+/*   Updated: 2024/10/10 19:33:24 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,23 @@
 
 int	is_number(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	if (str[i] == '-' || str[i] == '+')
-		i++;
 	while (str[i])
 	{
-		if (str[i] < '0' || str[i] > '9')
+		if (str[i] == ' ')
+		{
+			i++;
+			continue ;
+		}
+		if ((str[i] == '-' || str[i] == '+') && (i == 0 || str[i - 1] == ' ')
+			&& str[i + 1] >= '0' && str[i + 1] <= '9')
+			i++;
+		else if (str[i] >= '0' && str[i] <= '9')
+			i++;
+		else
 			return (0);
-		i++;
 	}
 	return (1);
 }
@@ -36,19 +43,30 @@ void	print_error_and_exit(t_stack *a, t_stack *b)
 	exit(1);
 }
 
-void validate_and_push(t_stack *a, t_stack *b, int argc, char **argv)
+void	free_split(char **split_args)
 {
-	int value;
-	int i = argc - 1;
+	int	i;
 
-	
+	i = 0;
+	while (split_args[i])
+	{
+		free(split_args[i]);
+		i++;
+	}
+	free(split_args);
+}
+
+void	validate_and_push(t_stack *a, t_stack *b, int argc, char **argv)
+{
+	int	value;
+	int	i;
+	int	counter;
+
+	counter = 0;
+	i = argc - 1;
 	while (i > 0)
 	{
-		if (!is_number(argv[i]))
-		{
-			print_error_and_exit(a, b);
-		}
-		if (!is_in_int_range(argv[i]))
+		if (!is_number(argv[i]) || !is_in_int_range(argv[i]))
 		{
 			print_error_and_exit(a, b);
 		}
@@ -65,24 +83,12 @@ int	main(int argc, char **argv)
 {
 	t_stack	*a;
 	t_stack	*b;
-	int		i;
 
-	i = argc - 1;
-	if (argc <= 2 && is_number(argv[i]))
-	{
-		write(1, argv[1], 1);
-		write(1, "\n", 1);
-		return (1);	
-	}
-	a = stack_size(argc - 1);
-	b = stack_size(argc - 1);
-	if (!a || !b)
-		print_error_and_exit(a, b);
-	validate_and_push(a, b, argc, argv);
+	if (argc < 2)
+		return (1);
+	initialize_stacks(&a, &b, argc, argv);
 	if (!is_sorted(a))
-	{
 		simple_min_max_sort(a, b);
-	}
 	free_stack(a);
 	free_stack(b);
 	return (0);

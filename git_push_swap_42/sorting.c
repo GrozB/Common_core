@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 17:25:08 by bgroz             #+#    #+#             */
-/*   Updated: 2024/10/07 19:15:27 by bgroz            ###   ########.fr       */
+/*   Updated: 2024/10/10 19:20:17 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	push_b_to_a(t_stack *a, t_stack *b)
 int	has_duplicate(t_stack *stack, int value)
 {
 	int	i;
-	
+
 	i = 0;
 	while (i < stack->size)
 	{
@@ -68,9 +68,11 @@ int	has_duplicate(t_stack *stack, int value)
 
 int	is_in_int_range(const char *str)
 {
-	int sign = 1;
-	long result = 0;
+	int		sign;
+	long	result;
 
+	sign = 1;
+	result = 0;
 	if (*str == '-' || *str == '+')
 	{
 		if (*str == '-')
@@ -82,7 +84,8 @@ int	is_in_int_range(const char *str)
 		if (*str < '0' || *str > '9')
 			return (0);
 		result = result * 10 + (*str - '0');
-		if ((sign == 1 && result > INT_MAX) || (sign == -1 && -result < INT_MIN))
+		if ((sign == 1 && result > INT_MAX)
+			|| (sign == -1 && (-result) < INT_MIN))
 			return (0);
 		str++;
 	}
