@@ -1,67 +1,86 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/10 17:32:30 by bgroz             #+#    #+#             */
-/*   Updated: 2024/10/10 18:06:26 by bgroz            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minitalk.h"
 
-static int	g_global;
+volatile sig_atomic_t g_acknowledged = 0;
 
 void	acknowledge_signal(int sig)
 {
-	(void)sig;
-	g_global = 1;
+    (void)sig;
+    g_acknowledged = 1;
 }
 
-void	send_bit(pid_t pid, char c)
+void	send_bit(pid_t pid, char bit)
 {
-	int	bit;
+    int signal;
 
-	bit = 7;
-	while (bit >= 0)
-	{
-		if ((c >> bit) & 1)
-			kill(pid, SIGUSR1);
-		else
-			kill(pid, SIGUSR2);
-		g_global = 0;
-		while (!g_global)
-			pause();
-		bit--;
-	}
+    if (bit == 1)
+        signal = SIGUSR1;
+    else
+        signal = SIGUSR2;
+    if (kill(pid, signal) == -1)
+    {
+        write(2, "Error: Failed to send signal\n", 29);
+        exit(EXIT_FAILURE);
+    }
+    while (!g_acknowledged)
+        ;
+    g_acknowledged = 0;
 }
 
-void	send_message(pid_t pid, char *msg)
+void	send_size(pid_t pid, size_t size)
 {
-	int	i;
+    int bit;
 
-	i = 0;
-	while (msg[i])
-	{
-		send_bit(pid, msg[i]);
-		i++;
-	}
-	send_bit(pid, '\0');
+    bit = sizeof(size_t) * 8 - 1;
+    while (bit >= 0)
+    {
+        send_bit(pid, (size >> bit) & 1);
+        bit--;
+    }
+}
+
+void	send_char(pid_t pid, char c)
+{
+    int bit;
+
+    bit = 7;
+    while (bit >= 0)
+    {
+        send_bit(pid, (c >> bit) & 1);
+        bit--;
+    }
+}
+
+void	send_message(pid_t pid, const char *message)
+{
+    size_t size;
+    int i;
+
+    size = ft_strlen(message);
+    send_size(pid, size);
+    i = 0;
+    while (message[i])
+    {
+        send_char(pid, message[i]);
+        i++;
+    }
 }
 
 int	main(int argc, char **argv)
 {
-	pid_t	pid;
+    pid_t pid;
 
-	if (argc != 3)
-	{
-		write(1, "Number of arguments is not correct\n", 36);
-		return (1);
-	}
-	pid = atoi(argv[1]);
-	signal(SIGUSR1, acknowledge_signal);
-	send_message(pid, argv[2]);
-	return (0);
+    if (argc != 3)
+    {
+        ft_printf("Usage: %s <PID> <message>\n", argv[0]);
+        return (1);
+    }
+    pid = ft_atoi(argv[1]);
+    if (pid <= 0)
+    {
+        ft_printf("Invalid PID: %s\n", argv[1]);
+        return (1);
+    }
+    signal(SIGUSR2, acknowledge_signal);
+    send_message(pid, argv[2]);
+    return (0);
 }
