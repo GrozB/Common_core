@@ -6,13 +6,13 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 18:18:42 by bgroz             #+#    #+#             */
-/*   Updated: 2024/10/07 17:47:30 by bgroz            ###   ########.fr       */
+/*   Updated: 2024/07/04 10:58:11 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_putstrr(char *s)
+int	ft_putstr(char *s)
 {
 	int	i;
 	int	count;
@@ -23,7 +23,7 @@ int	ft_putstrr(char *s)
 	i = 0;
 	while (s[i])
 	{
-		count += ft_putcharr((int)s[i]);
+		count += ft_putchar((int)s[i]);
 		i++;
 	}
 	return (count);

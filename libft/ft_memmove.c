@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 13:27:28 by bgroz             #+#    #+#             */
-/*   Updated: 2024/04/19 16:23:57 by bgroz            ###   ########.fr       */
+/*   Updated: 2024/07/04 11:02:33 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,4 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 		}
 	}
 	return (c_dest);
-}
-
-int	main(void)
-{
-	char	dst[] = "Where to copy";
-	const char	src[] = "this";
-	size_t	n = -1;
-
-	printf ("My Result is:%s\n", (char *)ft_memmove(dst, src, n));
-	printf ("Original Result is:%s\n", (char *)memmove(dst, src, n));
 }

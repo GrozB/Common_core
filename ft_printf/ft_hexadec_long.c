@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 16:58:12 by bgroz             #+#    #+#             */
-/*   Updated: 2024/04/30 12:53:52 by bgroz            ###   ########.fr       */
+/*   Updated: 2024/10/07 17:47:06 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	all_in_one(char *str)
 
 	if (str == NULL)
 		return (0);
-	len = ft_strlen(str);
+	len = ft_strlenn(str);
 	write(1, str, len);
 	free(str);
 	return (len);
@@ -47,7 +47,7 @@ static int	ft_calculation_positive(long long value, char *str)
 		value /= 16;
 	}
 	str[i] = '\0';
-	ft_strrev(str);
+	ft_strrevv(str);
 	return (1);
 }
 
@@ -69,7 +69,7 @@ static int	ft_calculation_negative(long long value, char *str)
 		uvalue /= 16;
 	}
 	str[i] = '\0';
-	ft_strrev(str);
+	ft_strrevv(str);
 	return (1);
 }
 
@@ -80,7 +80,7 @@ int	ft_hexadec_long(long long value)
 	str = (char *)malloc(33);
 	if (str == NULL)
 		return (0);
-	ft_memset (str, 0, 33);
+	ft_memsett (str, 0, 33);
 	if (value == 0)
 		return (ft_zero(str));
 	else if (value > 0)

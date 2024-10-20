@@ -6,11 +6,11 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 10:20:59 by bgroz             #+#    #+#             */
-/*   Updated: 2024/04/29 10:46:20 by bgroz            ###   ########.fr       */
+/*   Updated: 2024/10/07 17:47:35 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-char	*ft_strrev(char *str)
+char	*ft_strrevv(char *str)
 {
 	int		i;
 	int		index;

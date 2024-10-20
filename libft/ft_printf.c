@@ -6,20 +6,20 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 15:31:10 by bgroz             #+#    #+#             */
-/*   Updated: 2024/10/07 16:33:52 by bgroz            ###   ########.fr       */
+/*   Updated: 2024/07/04 10:57:21 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
 static int	what_is_it(const char c, va_list where)
 {
 	if (c == 'c')
-		return (ft_putcharr(va_arg(where, int)));
+		return (ft_putchar(va_arg(where, int)));
 	else if ((c == 'd' || c == 'i'))
-		return (ft_putnbrr(va_arg(where, int)));
+		return (ft_putnbr(va_arg(where, int)));
 	else if (c == 's')
-		return (ft_putstrr(va_arg(where, char *)));
+		return (ft_putstr(va_arg(where, char *)));
 	else if (c == 'x')
 		return (ft_hexadec(va_arg(where, unsigned int)));
 	else if (c == 'X')

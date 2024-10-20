@@ -1,30 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr.c                                        :+:      :+:    :+:   */
+/*   ft_putchar.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/15 18:18:42 by bgroz             #+#    #+#             */
-/*   Updated: 2024/10/07 17:47:30 by bgroz            ###   ########.fr       */
+/*   Created: 2024/04/15 17:46:40 by bgroz             #+#    #+#             */
+/*   Updated: 2024/04/25 16:45:18 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include <unistd.h>
 
-int	ft_putstrr(char *s)
+int	ft_putchar(char c)
 {
-	int	i;
-	int	count;
-
-	count = 0;
-	if (!s)
-		return (write(1, "(null)", 6));
-	i = 0;
-	while (s[i])
-	{
-		count += ft_putcharr((int)s[i]);
-		i++;
-	}
-	return (count);
+	write (1, &c, 1);
+	return (1);
 }

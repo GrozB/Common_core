@@ -1,30 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr.c                                        :+:      :+:    :+:   */
+/*   ft_pointer.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/15 18:18:42 by bgroz             #+#    #+#             */
-/*   Updated: 2024/10/07 17:47:30 by bgroz            ###   ########.fr       */
+/*   Created: 2024/04/29 11:55:02 by bgroz             #+#    #+#             */
+/*   Updated: 2024/07/04 10:58:31 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_putstrr(char *s)
+int	ft_pointer(void *value)
 {
-	int	i;
-	int	count;
+	int			count;
+	long long	ptr;
 
+	ptr = (long long)value;
 	count = 0;
-	if (!s)
-		return (write(1, "(null)", 6));
-	i = 0;
-	while (s[i])
+	if (ptr == 0)
 	{
-		count += ft_putcharr((int)s[i]);
-		i++;
+		count += write(1, "(nil)", 5);
+		return (count);
+	}
+	else
+	{
+		count += write(1, "0x", 2);
+		count += ft_hexadec_long(ptr);
 	}
 	return (count);
 }

@@ -6,13 +6,13 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 18:32:27 by bgroz             #+#    #+#             */
-/*   Updated: 2024/04/29 16:33:08 by bgroz            ###   ########.fr       */
+/*   Updated: 2024/10/07 17:47:29 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_putnbr(int n)
+int	ft_putnbrr(int n)
 {
 	int	count;
 
@@ -31,11 +31,11 @@ int	ft_putnbr(int n)
 		}
 		if (n > 9)
 		{
-			count += ft_putnbr(n / 10);
-			count += ft_putnbr(n % 10);
+			count += ft_putnbrr(n / 10);
+			count += ft_putnbrr(n % 10);
 		}
 		else
-			count += ft_putchar(n + '0');
+			count += ft_putcharr(n + '0');
 	}
 	return (count);
 }

@@ -1,30 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr.c                                        :+:      :+:    :+:   */
+/*   ft_strrev.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/15 18:18:42 by bgroz             #+#    #+#             */
-/*   Updated: 2024/10/07 17:47:30 by bgroz            ###   ########.fr       */
+/*   Created: 2024/04/29 10:20:59 by bgroz             #+#    #+#             */
+/*   Updated: 2024/04/29 10:46:20 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
-
-int	ft_putstrr(char *s)
+char	*ft_strrev(char *str)
 {
-	int	i;
-	int	count;
+	int		i;
+	int		index;
+	char	c;
 
-	count = 0;
-	if (!s)
-		return (write(1, "(null)", 6));
+	index = 0;
 	i = 0;
-	while (s[i])
+	while (str[index] != '\0')
 	{
-		count += ft_putcharr((int)s[i]);
-		i++;
+		index++;
 	}
-	return (count);
+	index--;
+	while (i < (index))
+	{
+		c = str[i];
+		str[i] = str[index];
+		str[index] = c;
+		i++;
+		index--;
+	}
+	return (str);
 }

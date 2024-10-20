@@ -1,30 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr.c                                        :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/15 18:18:42 by bgroz             #+#    #+#             */
-/*   Updated: 2024/10/07 17:47:30 by bgroz            ###   ########.fr       */
+/*   Created: 2024/10/20 16:23:13 by bgroz             #+#    #+#             */
+/*   Updated: 2024/10/20 16:27:22 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "fractal.h"
 
-int	ft_putstrr(char *s)
+void	*check_mlx_instance(void *ptr, const char *error_message)
 {
-	int	i;
-	int	count;
-
-	count = 0;
-	if (!s)
-		return (write(1, "(null)", 6));
-	i = 0;
-	while (s[i])
+	if (!ptr)
 	{
-		count += ft_putcharr((int)s[i]);
-		i++;
+		write(2, error_message, 33);
+		exit(EXIT_FAILURE);
 	}
-	return (count);
+	return (ptr);
 }

@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/08 13:35:06 by bgroz             #+#    #+#             */
-/*   Updated: 2024/04/18 10:44:38 by bgroz            ###   ########.fr       */
+/*   Updated: 2024/10/07 19:05:42 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ static int	ft_overflow(long res, int dig, int sign)
 	if (sign == 1)
 	{
 		if (res > (LONG_MAX - dig) / 10)
-			return (-1);
+			return (INT_MAX);
 	}
 	else
 	{
 		if (-res < (LONG_MIN + dig) / 10)
-			return (0);
+			return (INT_MIN);
 	}
 	return (1);
 }

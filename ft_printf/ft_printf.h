@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 15:23:55 by bgroz             #+#    #+#             */
-/*   Updated: 2024/05/02 10:45:26 by bgroz            ###   ########.fr       */
+/*   Updated: 2024/10/07 16:34:57 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,17 @@
 # include <stdlib.h>
 # include <aio.h>
 
-int				ft_putchar(char c);
-int				ft_putnbr(int n);
-int				ft_putnbr(int n);
-int				ft_putstr(char *s);
+int				ft_putcharr(char c);
+int				ft_putnbrr(int n);
+int				ft_putstrr(char *s);
 int				ft_hexadec(unsigned int value);
-int				ft_strlen(char *s);
-char			*ft_strrev(char *str);
+int				ft_strlenn(char *s);
+char			*ft_strrevv(char *str);
 int				ft_capital_hexadec(unsigned int value);
 int				ft_pointer(void *value);
 unsigned int	ft_unsigned_dec(unsigned int n);
 int				ft_printf(const char *str, ...);
 int				ft_hexadec_long(long long value);
-void			*ft_memset(void *s, int c, size_t n);
+void			*ft_memsett(void *s, int c, size_t n);
 
 #endif

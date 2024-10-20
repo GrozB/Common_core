@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 16:00:30 by bgroz             #+#    #+#             */
-/*   Updated: 2024/04/18 11:00:35 by bgroz            ###   ########.fr       */
+/*   Updated: 2024/07/04 11:02:07 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include "libft.h"
 
-static char	*ft_strrev(char *str, int neg)
+static char	*ft_strrevcomp(char *str, int neg)
 {
 	int		i;
 	int		index;
@@ -98,5 +98,5 @@ char	*ft_itoa(int n)
 	ft_fill(res + extra, un);
 	if (sign == -1)
 		res[0] = '-';
-	return (ft_strrev(res, extra));
+	return (ft_strrevcomp(res, extra));
 }

@@ -1,30 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr.c                                        :+:      :+:    :+:   */
+/*   ft_unsigned_dec.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/15 18:18:42 by bgroz             #+#    #+#             */
-/*   Updated: 2024/10/07 17:47:30 by bgroz            ###   ########.fr       */
+/*   Created: 2024/04/29 13:00:14 by bgroz             #+#    #+#             */
+/*   Updated: 2024/07/04 10:57:33 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_putstrr(char *s)
+unsigned int	ft_unsigned_dec(unsigned int n)
 {
-	int	i;
 	int	count;
 
 	count = 0;
-	if (!s)
-		return (write(1, "(null)", 6));
-	i = 0;
-	while (s[i])
+	if (n > 9)
 	{
-		count += ft_putcharr((int)s[i]);
-		i++;
+		count += ft_unsigned_dec(n / 10);
+		count += ft_unsigned_dec(n % 10);
 	}
+	else
+		count += ft_putchar(n + '0');
 	return (count);
 }

@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 13:00:14 by bgroz             #+#    #+#             */
-/*   Updated: 2024/04/30 13:51:14 by bgroz            ###   ########.fr       */
+/*   Updated: 2024/10/07 17:47:36 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,6 @@ unsigned int	ft_unsigned_dec(unsigned int n)
 		count += ft_unsigned_dec(n % 10);
 	}
 	else
-		count += ft_putchar(n + '0');
+		count += ft_putcharr(n + '0');
 	return (count);
 }
