@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/10 16:05:44 by bgroz             #+#    #+#             */
-/*   Updated: 2024/10/10 18:19:48 by bgroz            ###   ########.fr       */
+/*   Created: 2024/10/21 16:02:20 by bgroz             #+#    #+#             */
+/*   Updated: 2024/10/21 17:57:00 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,20 @@
 # include <stdio.h>
 # include "libft/libft.h"
 
-void	append_char_to_string(char **str, char c, int *len);
-void	reset_and_print(char **str, int *len);
-void	send_acknowledgment(pid_t client_pid);
-void	reset_static_vars(int *bit_count, char *c);
-void	handle_signal(int sig, siginfo_t *info, void *context);
-void	init_server(void);
+void	send_bit(pid_t pid, char bit);
+void	send_char(pid_t pid, char c);
+void	acknowledge_signal(int sig);
+void	send_size(pid_t pid, size_t size);
+void	send_message(pid_t pid, const char *message);
+
+typedef struct s_message
+{
+	int				bit_count;
+	size_t			size;
+	size_t			received;
+	char			*message;
+	int				state;
+	unsigned char	c;
+}				t_message;
 
 #endif

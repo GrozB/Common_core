@@ -1,13 +1,13 @@
 NAME_SERVER = server
 NAME_CLIENT = client
 
-SOURCE_SERVER = server.c
-SOURCE_CLIENT = client.c
+SOURCE_SERVER = server.c message.c
+SOURCE_CLIENT = client.c message.c
 
 OBJECTS_SERVER = $(SOURCE_SERVER:.c=.o)
 OBJECTS_CLIENT = $(SOURCE_CLIENT:.c=.o)
 
-CFLAGS = -Wall -Werror -Wextra -I./libft
+CFLAGS = -Wall -Werror -Wextra
 
 CC = cc
 
