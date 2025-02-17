@@ -131,6 +131,10 @@ static int	is_builtin(char *cmd)
 		return (1);
 	if (strcmp(cmd, "env") == 0)
 		return (1);
+	if (strcmp(cmd, "export") == 0)
+		return (1);
+	if (strcmp(cmd, "unset") == 0)
+		return (1);
 	return (0);
 }
 
@@ -146,6 +150,10 @@ static int	execute_builtin(t_command *cmd)
 		return (builtin_pwd());
 	if (strcmp(cmd->args[0], "env") == 0)
 		return (builtin_env());
+	if (strcmp(cmd->args[0], "export") == 0)
+		return (builtin_export(cmd->args));
+	if (strcmp(cmd->args[0], "unset") == 0)
+		return (builtin_unset(cmd->args));
 	return (1);
 }
 

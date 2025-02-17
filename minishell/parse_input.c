@@ -4,17 +4,22 @@
 #include <string.h>
 #include <stdio.h>
 
+/* Returns 1 if c is a whitespace character */
 static int	is_whitespace(char c)
 {
 	return (c == ' ' || c == '\t');
 }
 
+/* Returns 1 if c is valid in a variable name */
 static int	is_var_char(char c)
 {
-	return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')
-		|| (c >= '0' && c <= '9') || c == '_');
+	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
+	    (c >= '0' && c <= '9') || c == '_')
+		return (1);
+	return (0);
 }
 
+/* Append a variable's value to buf; returns -1 on error */
 static int	append_var(const char *input, int *i, char *buf, int *pos)
 {
 	int		start;
@@ -41,6 +46,7 @@ static int	append_var(const char *input, int *i, char *buf, int *pos)
 	return (0);
 }
 
+/* Parse double-quoted segment; returns -1 on error */
 static int	parse_dq(const char *input, int *i, char *buf, int *pos)
 {
 	(*i)++;
@@ -67,6 +73,7 @@ static int	parse_dq(const char *input, int *i, char *buf, int *pos)
 	return (0);
 }
 
+/* Parse single-quoted segment; returns -1 on error */
 static int	parse_sq(const char *input, int *i, char *buf, int *pos)
 {
 	(*i)++;
@@ -84,6 +91,7 @@ static int	parse_sq(const char *input, int *i, char *buf, int *pos)
 	return (0);
 }
 
+/* Handle a quoted segment; returns -1 on error */
 static int	handle_quote(const char *input, int *i, char *buf, int *pos)
 {
 	if (input[*i] == '\"')
@@ -99,31 +107,42 @@ static int	handle_quote(const char *input, int *i, char *buf, int *pos)
 	return (0);
 }
 
+/* Build one token with variable expansion; returns a new token or NULL on error */
 static char	*token_builder(const char *input, int *i)
 {
 	int		pos;
-	int		len;
+	int		buf_len;
 	char	*buf;
 
 	pos = 0;
-	len = strlen(input);
-	buf = malloc(len + 1);
+	buf_len = strlen(input) * 2;
+	buf = malloc(buf_len + 1);
 	if (!buf)
 		return (NULL);
 	while (input[*i] && !is_whitespace(input[*i]))
 	{
-		if (input[*i] == '\"' || input[*i] == '\'')
+		if (input[*i] == '$')
 		{
-			if (handle_quote(input, i, buf, &pos) < 0)
+			/* Check if next character is '?' */
+			if (input[*i + 1] == '?')
 			{
-				free(buf);
-				return (NULL);
+				buf[pos++] = '$';
+				buf[pos++] = '?';
+				(*i) += 2;
+			}
+			else
+			{
+				(*i)++;
+				if (append_var(input, i, buf, &pos) < 0)
+				{
+					free(buf);
+					return (NULL);
+				}
 			}
 		}
-		else if (input[*i] == '$')
+		else if (input[*i] == '\"' || input[*i] == '\'')
 		{
-			(*i)++;
-			if (append_var(input, i, buf, &pos) < 0)
+			if (handle_quote(input, i, buf, &pos) < 0)
 			{
 				free(buf);
 				return (NULL);
@@ -139,15 +158,18 @@ static char	*token_builder(const char *input, int *i)
 	return (buf);
 }
 
+/* Returns one token from input */
 static char	*parse_token(const char *input, int *i)
 {
 	return (token_builder(input, i));
 }
 
+/* Count tokens and detect unmatched quotes; returns -1 on error */
 static int	count_tokens(const char *input)
 {
 	int	i;
 	int	count;
+	char	quote;
 
 	i = 0;
 	count = 0;
@@ -162,12 +184,13 @@ static int	count_tokens(const char *input)
 			{
 				if (input[i] == '\"' || input[i] == '\'')
 				{
-					char quote = input[i];
+					quote = input[i];
 					i++;
 					while (input[i] && input[i] != quote)
 						i++;
-					if (input[i] == quote)
-						i++;
+					if (input[i] != quote)
+						return (-1);
+					i++;
 				}
 				else
 					i++;
@@ -177,7 +200,9 @@ static int	count_tokens(const char *input)
 	return (count);
 }
 
-char	**parse_input(const char *input)
+/* Main parsing function; returns an array of tokens or NULL on error.
+   Each token is expanded for variables (including $?). */
+char	**parse_input(const char *input, int last_exit_status)
 {
 	int		token_count;
 	char	**tokens;
@@ -207,6 +232,11 @@ char	**parse_input(const char *input)
 			}
 			free(tokens);
 			return (NULL);
+		}
+		{
+			char *expanded = expand_variables(tok, last_exit_status);
+			free(tok);
+			tok = expanded;
 		}
 		tokens[t++] = tok;
 		while (input[i] && is_whitespace(input[i]))

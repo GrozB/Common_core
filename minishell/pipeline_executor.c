@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include "utils.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -128,6 +129,9 @@ static char	*find_command_path(const char *cmd)
 	return (ft_strdup(cmd));
 }
 
+#include <sys/types.h>
+#include <sys/wait.h>
+
 int	execute_pipeline(t_command **cmds, int n)
 {
 	int		i;
@@ -135,6 +139,8 @@ int	execute_pipeline(t_command **cmds, int n)
 	int		prev_fd;
 	int		pipe_fd[2];
 	pid_t	pid;
+	int		final_status;
+	int		raw_status;
 
 	prev_fd = -1;
 	i = 0;
@@ -215,7 +221,20 @@ int	execute_pipeline(t_command **cmds, int n)
 		}
 		i++;
 	}
-	while (i--)
-		wait(&status);
-	return (status);
+	final_status = 0;
+	i = 0;
+	while (i < n)
+	{
+		raw_status = 0;
+		wait(&raw_status);
+		/* If the process terminated normally, extract exit code from upper 8 bits */
+		if ((raw_status & 0x7F) == 0)
+			status = (raw_status >> 8) & 0xFF;
+		else
+			status = 128 + (raw_status & 0x7F);
+		if (status != 0)
+			final_status = status;
+		i++;
+	}
+	return (final_status);
 }

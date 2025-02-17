@@ -1,70 +1,126 @@
 #include "env_expansion.h"
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
+#include <unistd.h>
 
 static int	is_var_char(char c)
 {
 	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-		(c >= '0' && c <= '9') || c == '_')
+	    (c >= '0' && c <= '9') || c == '_')
 		return (1);
 	return (0);
 }
 
-static char	*get_var_value(const char *var)
+static char	*ft_itoa(int n)
 {
-	char	*val = getenv(var);
-	if (!val)
-		return (strdup(""));
-	return (strdup(val));
+	int		temp;
+	int		len;
+	int		neg;
+	char	*str;
+
+	if (n == 0)
+	{
+		str = malloc(2);
+		if (!str)
+			return (NULL);
+		str[0] = '0';
+		str[1] = '\0';
+		return (str);
+	}
+	neg = 0;
+	if (n < 0)
+	{
+		neg = 1;
+		n = -n;
+	}
+	temp = n;
+	len = 0;
+	while (temp)
+	{
+		len++;
+		temp /= 10;
+	}
+	len += neg;
+	str = malloc(len + 1);
+	if (!str)
+		return (NULL);
+	str[len] = '\0';
+	while (n)
+	{
+		str[--len] = (n % 10) + '0';
+		n /= 10;
+	}
+	if (neg)
+		str[0] = '-';
+	return (str);
 }
 
-char	*expand_variables(const char *str)
+char	*expand_variables(const char *str, int last_exit_status)
 {
-	size_t	i = 0;
-	size_t	res_size = 0;
-	char	*result = NULL;
-	char	*tmp = NULL;
+	int		i = 0;
+	int		pos = 0;
+	int		len = strlen(str);
+	char	*res = malloc(len * 2 + 1);
+	char	*temp;
+	int		j;
+	if (!res)
+		return (NULL);
 	while (str[i])
 	{
 		if (str[i] == '$')
 		{
-			size_t	j = i + 1;
-			while (str[j] && is_var_char(str[j]))
-				j++;
-			char	*var_name = strndup(str + i + 1, j - i - 1);
-			char	*var_value = get_var_value(var_name);
-			free(var_name);
-			size_t	val_len = strlen(var_value);
-			tmp = malloc(res_size + val_len + 1);
-			if (result)
+			i++;
+			if (str[i] == '?')
 			{
-				memcpy(tmp, result, res_size);
-				free(result);
+				temp = ft_itoa(last_exit_status);
+				if (!temp)
+				{
+					free(res);
+					return (NULL);
+				}
+				j = 0;
+				while (temp[j])
+				{
+					res[pos] = temp[j];
+					pos++;
+					j++;
+				}
+				free(temp);
+				i++;
 			}
-			memcpy(tmp + res_size, var_value, val_len);
-			res_size += val_len;
-			tmp[res_size] = '\0';
-			free(var_value);
-			result = tmp;
-			i = j;
+			else
+			{
+				int	start = i;
+				while (str[i] && is_var_char(str[i]))
+					i++;
+				temp = strndup(str + start, i - start);
+				if (!temp)
+				{
+					free(res);
+					return (NULL);
+				}
+				{
+					char *val = getenv(temp);
+					j = 0;
+					free(temp);
+					if (!val)
+						val = "";
+					while (val[j])
+					{
+						res[pos] = val[j];
+						pos++;
+						j++;
+					}
+				}
+			}
 		}
 		else
 		{
-			tmp = malloc(res_size + 2);
-			if (result)
-			{
-				memcpy(tmp, result, res_size);
-				free(result);
-			}
-			tmp[res_size] = str[i];
-			res_size++;
-			tmp[res_size] = '\0';
-			result = tmp;
+			res[pos] = str[i];
+			pos++;
 			i++;
 		}
 	}
-	if (!result)
-		result = strdup("");
-	return (result);
+	res[pos] = '\0';
+	return (res);
 }

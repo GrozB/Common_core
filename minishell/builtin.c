@@ -71,6 +71,97 @@ int	builtin_cd(char **args)
 	return (0);
 }
 
+int	builtin_export(char **args)
+{
+	int		i;
+	int		key_len;
+	char	*eq;
+	char	*key;
+	char	**new_env;
+	int		count;
+
+	if (!args[1])
+	{
+		i = 0;
+		while (environ[i])
+		{
+			printf("%s\n", environ[i]);
+			i++;
+		}
+		return (0);
+	}
+	eq = strchr(args[1], '=');
+	if (!eq)
+	{
+		fprintf(stderr, "export: invalid argument: %s\n", args[1]);
+		return (1);
+	}
+	key_len = eq - args[1];
+	key = strndup(args[1], key_len);
+	if (!key)
+		return (1);
+	i = 0;
+	while (environ[i])
+	{
+		if (strncmp(environ[i], key, key_len) == 0 && environ[i][key_len] == '=')
+		{
+			free(environ[i]);
+			environ[i] = strdup(args[1]);
+			free(key);
+			return (0);
+		}
+		i++;
+	}
+	free(key);
+	count = 0;
+	while (environ[count])
+		count++;
+	new_env = malloc(sizeof(char *) * (count + 2));
+	if (!new_env)
+		return (1);
+	i = 0;
+	while (environ[i])
+	{
+		new_env[i] = environ[i];
+		i++;
+	}
+	new_env[i] = strdup(args[1]);
+	new_env[i + 1] = NULL;
+	environ = new_env;
+	return (0);
+}
+
+int	builtin_unset(char **args)
+{
+	int	i;
+	int	key_len;
+
+	if (!args[1])
+	{
+		fprintf(stderr, "unset: not enough arguments\n");
+		return (1);
+	}
+	key_len = strlen(args[1]);
+	i = 0;
+	while (environ[i])
+	{
+		if (strncmp(environ[i], args[1], key_len) == 0 &&
+				environ[i][key_len] == '=')
+		{
+			free(environ[i]);
+			while (environ[i])
+			{
+				environ[i] = environ[i + 1];
+				i++;
+			}
+			i = 0;
+		}
+		else
+			i++;
+	}
+	return (0);
+}
+
 int	builtin_exit(void)
 {
 	exit(0);

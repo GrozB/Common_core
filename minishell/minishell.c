@@ -1,5 +1,7 @@
 #include "minishell.h"
 #include "signals.h"
+#include "env_expansion.h"
+#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -149,36 +151,19 @@ static t_command	**split_commands(char **tokens, int *num_commands)
 	return (cmds);
 }
 
-static void	process_line(char **tokens)
+static int	process_line(char **tokens)
 {
-	int status, i, num_commands;
-	t_command *cmd;
-	t_command **cmds;
-	if (check_pipe_token(tokens) < 0)
-	{
-		i = 0;
-		while (tokens[i])
-		{
-			free(tokens[i]);
-			i++;
-		}
-		free(tokens);
-		return;
-	}
+	int			status;
+	t_command	*cmd;
+	t_command	**cmds;
+	int			num_commands;
+	int			i;
+
 	if (count_pipes(tokens) > 0)
 	{
 		cmds = split_commands(tokens, &num_commands);
 		if (!cmds)
-		{
-			i = 0;
-			while (tokens[i])
-			{
-				free(tokens[i]);
-				i++;
-			}
-			free(tokens);
-			return;
-		}
+			return (1);
 		status = execute_pipeline(cmds, num_commands);
 		free_commands(cmds, num_commands);
 	}
@@ -188,7 +173,6 @@ static void	process_line(char **tokens)
 		status = execute_command(cmd);
 		free_command(cmd);
 	}
-	(void)status;
 	i = 0;
 	while (tokens[i])
 	{
@@ -196,13 +180,18 @@ static void	process_line(char **tokens)
 		i++;
 	}
 	free(tokens);
+	status = exit_status(status);
+	return (status);
 }
+
 
 int	main(void)
 {
 	struct sigaction sa;
 	char *line;
 	char **tokens;
+	int	last_exit_status = 0;
+
 	sa.sa_handler = sigint_handler;
 	sa.sa_flags = SA_RESTART;
 	sigemptyset(&sa.sa_mask);
@@ -218,11 +207,11 @@ int	main(void)
 		}
 		if (*line)
 			add_history(line);
-		tokens = parse_input(line);
+		tokens = parse_input(line, last_exit_status);
 		free(line);
 		if (!tokens)
 			continue;
-		process_line(tokens);
+		last_exit_status = process_line(tokens);
 	}
 	return (0);
 }
