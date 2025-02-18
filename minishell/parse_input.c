@@ -1,5 +1,6 @@
 #include "minishell.h"
 #include "env_expansion.h"
+#include "here_doc.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -209,6 +210,7 @@ char	**parse_input(const char *input, int last_exit_status)
 	int		i;
 	int		t;
 	char	*tok;
+	char	**fixed_tokens;
 
 	token_count = count_tokens(input);
 	if (token_count < 0)
@@ -243,5 +245,15 @@ char	**parse_input(const char *input, int last_exit_status)
 			i++;
 	}
 	tokens[t] = NULL;
-	return (tokens);
+	/* Now fix tokens that combine the here-doc operator and delimiter */
+	fixed_tokens = fix_here_doc_tokens(tokens);
+	/* Free the original tokens */
+	i = 0;
+	while (tokens[i])
+	{
+		free(tokens[i]);
+		i++;
+	}
+	free(tokens);
+	return (fixed_tokens);
 }

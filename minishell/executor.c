@@ -176,7 +176,13 @@ int	execute_command(t_command *cmd)
 	}
 	if (pid == 0)
 	{
-		if (cmd->infile)
+		/* Use here_doc_fd if set; it takes precedence over infile */
+		if (cmd->here_doc_fd != -1)
+		{
+			dup2(cmd->here_doc_fd, STDIN_FILENO);
+			close(cmd->here_doc_fd);
+		}
+		else if (cmd->infile)
 		{
 			fd_in = open(cmd->infile, O_RDONLY);
 			if (fd_in < 0)
@@ -202,7 +208,7 @@ int	execute_command(t_command *cmd)
 			close(fd_out);
 		}
 		{
-			char	*cmd_path = find_command_path(cmd->args[0]);
+			char *cmd_path = find_command_path(cmd->args[0]);
 			if (!cmd_path)
 				exit(1);
 			if (execve(cmd_path, cmd->args, environ) < 0)
@@ -217,12 +223,9 @@ int	execute_command(t_command *cmd)
 	else
 	{
 		waitpid(pid, &status, 0);
-		/* Only print an extra newline if "cat" succeeded */
-		if (cmd->args && cmd->args[0] && strcmp(cmd->args[0], "cat") == 0)
-		{
-			if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
-				printf("\n");
-		}
+		/* In the parent, ensure we close the here_doc_fd if it's still open */
+		if (cmd->here_doc_fd != -1)
+			close(cmd->here_doc_fd);
 	}
 	return (status);
 }

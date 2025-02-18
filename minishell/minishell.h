@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 16:59:18 by bgroz             #+#    #+#             */
-/*   Updated: 2025/02/17 17:14:40 by bgroz            ###   ########.fr       */
+/*   Updated: 2025/02/18 17:31:54 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ typedef struct s_command
 	char	*infile;
 	char	*outfile;
 	int		append;
+	int		here_doc_fd;
 }	t_command;
 
 char **parse_input(const char *input, int last_exit_status);

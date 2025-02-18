@@ -1,6 +1,8 @@
 #include "minishell.h"
+#include "here_doc.h"
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 static int	is_redirection(const char *token)
 {
@@ -11,6 +13,8 @@ static int	is_redirection(const char *token)
 	if (strcmp(token, ">>") == 0)
 		return (1);
 	if (strcmp(token, "<") == 0)
+		return (1);
+	if (strcmp(token, "<<") == 0)
 		return (1);
 	return (0);
 }
@@ -29,6 +33,7 @@ t_command	*parse_command(char **tokens)
 	cmd->infile = NULL;
 	cmd->outfile = NULL;
 	cmd->append = 0;
+	cmd->here_doc_fd = -1;
 	arg_count = 0;
 	i = 0;
 	while (tokens[i])
@@ -84,6 +89,15 @@ t_command	*parse_command(char **tokens)
 				i++;
 			}
 		}
+		else if (strcmp(tokens[i], "<<") == 0)
+		{
+			i++;
+			if (tokens[i])
+			{
+				cmd->here_doc_fd = handle_here_doc(tokens[i]);
+				i++;
+			}
+		}
 		else
 		{
 			cmd->args[j] = strdup(tokens[i]);
@@ -115,5 +129,7 @@ void	free_command(t_command *cmd)
 		free(cmd->infile);
 	if (cmd->outfile)
 		free(cmd->outfile);
+	if (cmd->here_doc_fd != -1)
+		close(cmd->here_doc_fd);
 	free(cmd);
 }

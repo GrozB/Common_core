@@ -173,7 +173,13 @@ int	execute_pipeline(t_command **cmds, int n)
 				dup2(pipe_fd[1], STDOUT_FILENO);
 				close(pipe_fd[1]);
 			}
-			if (cmds[i]->infile)
+			/* Here-document redirection takes precedence over infile redirection */
+			if (cmds[i]->here_doc_fd != -1)
+			{
+				dup2(cmds[i]->here_doc_fd, STDIN_FILENO);
+				close(cmds[i]->here_doc_fd);
+			}
+			else if (cmds[i]->infile)
 			{
 				int fd_in = open(cmds[i]->infile, O_RDONLY);
 				if (fd_in < 0)
@@ -212,6 +218,10 @@ int	execute_pipeline(t_command **cmds, int n)
 				free(cmd_path);
 			}
 		}
+		/* Parent process: close parent's copy of here_doc_fd, if set */
+		if (cmds[i]->here_doc_fd != -1)
+			close(cmds[i]->here_doc_fd);
+
 		if (prev_fd != -1)
 			close(prev_fd);
 		if (i < n - 1)
