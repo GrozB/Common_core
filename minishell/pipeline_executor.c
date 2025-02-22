@@ -136,11 +136,11 @@ int	execute_pipeline(t_command **cmds, int n)
 {
 	int		i;
 	int		status;
-	int		prev_fd;
+	int		fd_in;
 	int		pipe_fd[2];
+	int		prev_fd;
 	pid_t	pid;
-	int		final_status;
-	int		raw_status;
+	pid_t	last_pid = -1;
 
 	prev_fd = -1;
 	i = 0;
@@ -162,18 +162,20 @@ int	execute_pipeline(t_command **cmds, int n)
 		}
 		if (pid == 0)
 		{
+			/* Set up input from previous pipe, if any */
 			if (prev_fd != -1)
 			{
 				dup2(prev_fd, STDIN_FILENO);
 				close(prev_fd);
 			}
+			/* Set up output to next pipe, if any */
 			if (i < n - 1)
 			{
 				close(pipe_fd[0]);
 				dup2(pipe_fd[1], STDOUT_FILENO);
 				close(pipe_fd[1]);
 			}
-			/* Here-document redirection takes precedence over infile redirection */
+			/* Here-doc or infile redirection */
 			if (cmds[i]->here_doc_fd != -1)
 			{
 				dup2(cmds[i]->here_doc_fd, STDIN_FILENO);
@@ -181,7 +183,7 @@ int	execute_pipeline(t_command **cmds, int n)
 			}
 			else if (cmds[i]->infile)
 			{
-				int fd_in = open(cmds[i]->infile, O_RDONLY);
+				fd_in = open(cmds[i]->infile, O_RDONLY);
 				if (fd_in < 0)
 				{
 					perror("open infile");
@@ -190,6 +192,7 @@ int	execute_pipeline(t_command **cmds, int n)
 				dup2(fd_in, STDIN_FILENO);
 				close(fd_in);
 			}
+			/* Outfile redirection */
 			if (cmds[i]->outfile)
 			{
 				int fd_out;
@@ -205,6 +208,10 @@ int	execute_pipeline(t_command **cmds, int n)
 				dup2(fd_out, STDOUT_FILENO);
 				close(fd_out);
 			}
+			/* Execute built-in or external command */
+			if (is_builtin(cmds[i]->args[0]))
+				exit(execute_builtin(cmds[i]));
+			else
 			{
 				char *cmd_path = find_command_path(cmds[i]->args[0]);
 				if (!cmd_path)
@@ -218,10 +225,9 @@ int	execute_pipeline(t_command **cmds, int n)
 				free(cmd_path);
 			}
 		}
-		/* Parent process: close parent's copy of here_doc_fd, if set */
+		/* Parent process cleanup */
 		if (cmds[i]->here_doc_fd != -1)
 			close(cmds[i]->here_doc_fd);
-
 		if (prev_fd != -1)
 			close(prev_fd);
 		if (i < n - 1)
@@ -229,22 +235,13 @@ int	execute_pipeline(t_command **cmds, int n)
 			close(pipe_fd[1]);
 			prev_fd = pipe_fd[0];
 		}
+		/* Save PID of the last command */
+		if (i == n - 1)
+			last_pid = pid;
 		i++;
 	}
-	final_status = 0;
-	i = 0;
-	while (i < n)
-	{
-		raw_status = 0;
-		wait(&raw_status);
-		/* If the process terminated normally, extract exit code from upper 8 bits */
-		if ((raw_status & 0x7F) == 0)
-			status = (raw_status >> 8) & 0xFF;
-		else
-			status = 128 + (raw_status & 0x7F);
-		if (status != 0)
-			final_status = status;
-		i++;
-	}
-	return (final_status);
+	waitpid(last_pid, &status, 0);
+	while (wait(NULL) > 0)
+		;
+	return (exit_status(status));
 }

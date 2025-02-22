@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 16:59:18 by bgroz             #+#    #+#             */
-/*   Updated: 2025/02/18 17:31:54 by bgroz            ###   ########.fr       */
+/*   Updated: 2025/02/22 16:58:38 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void	free_command(t_command *cmd);
 void	free_commands(t_command **cmds, int num_commands);
 int		execute_command(t_command *cmd);
 int		execute_pipeline(t_command **cmds, int n);
+char	*ft_itoa(int n);
+int	is_builtin(char *cmd);
+int	execute_builtin(t_command *cmd);
 
 #endif
-
-

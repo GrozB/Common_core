@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdio.h>
 
 static int	is_redirection(const char *token)
 {
@@ -41,8 +42,13 @@ t_command	*parse_command(char **tokens)
 		if (is_redirection(tokens[i]))
 		{
 			i++;
-			if (tokens[i])
-				i++;
+			if (!tokens[i])
+			{
+				fprintf(stderr, "minishell: syntax error: missing redirection target\n");
+				free(cmd);
+				return (NULL);
+			}
+			i++;
 		}
 		else
 		{
@@ -69,6 +75,12 @@ t_command	*parse_command(char **tokens)
 				cmd->append = 0;
 				i++;
 			}
+			else
+			{
+				fprintf(stderr, "minishell: syntax error: missing redirection target\n");
+				free_command(cmd);
+				return (NULL);
+			}
 		}
 		else if (strcmp(tokens[i], ">>") == 0)
 		{
@@ -79,6 +91,12 @@ t_command	*parse_command(char **tokens)
 				cmd->append = 1;
 				i++;
 			}
+			else
+			{
+				fprintf(stderr, "minishell: syntax error: missing redirection target\n");
+				free_command(cmd);
+				return (NULL);
+			}
 		}
 		else if (strcmp(tokens[i], "<") == 0)
 		{
@@ -88,6 +106,12 @@ t_command	*parse_command(char **tokens)
 				cmd->infile = strdup(tokens[i]);
 				i++;
 			}
+			else
+			{
+				fprintf(stderr, "minishell: syntax error: missing redirection target\n");
+				free_command(cmd);
+				return (NULL);
+			}
 		}
 		else if (strcmp(tokens[i], "<<") == 0)
 		{
@@ -96,6 +120,12 @@ t_command	*parse_command(char **tokens)
 			{
 				cmd->here_doc_fd = handle_here_doc(tokens[i]);
 				i++;
+			}
+			else
+			{
+				fprintf(stderr, "minishell: syntax error: missing here-doc delimiter\n");
+				free_command(cmd);
+				return (NULL);
 			}
 		}
 		else

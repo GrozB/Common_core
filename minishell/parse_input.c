@@ -20,7 +20,6 @@ static int	is_var_char(char c)
 	return (0);
 }
 
-/* Append a variable's value to buf; returns -1 on error */
 static int	append_var(const char *input, int *i, char *buf, int *pos)
 {
 	int		start;
@@ -47,34 +46,49 @@ static int	append_var(const char *input, int *i, char *buf, int *pos)
 	return (0);
 }
 
-/* Parse double-quoted segment; returns -1 on error */
-static int	parse_dq(const char *input, int *i, char *buf, int *pos)
+static int parse_dq(const char *input, int *i, char *buf, int *pos, int last_exit_status)
 {
-	(*i)++;
-	while (input[*i] && input[*i] != '\"')
-	{
-		if (input[*i] == '$')
-		{
-			(*i)++;
-			if (append_var(input, i, buf, pos) < 0)
-				return (-1);
-		}
-		else
-		{
-			buf[(*pos)++] = input[*i];
-			(*i)++;
-		}
-	}
-	if (input[*i] != '\"')
-	{
-		fprintf(stderr, "minishell: syntax error: unmatched \"\n");
-		return (-1);
-	}
-	(*i)++;
-	return (0);
+    (*i)++;
+    while (input[*i] && input[*i] != '\"')
+    {
+        if (input[*i] == '$')
+        {
+            (*i)++;
+            if (input[*i] == '?')
+            {
+                char *num = ft_itoa(last_exit_status);
+                if (!num)
+                    return (-1);
+                int k = 0;
+                while (num[k])
+                {
+                    buf[(*pos)++] = num[k];
+                    k++;
+                }
+                free(num);
+                (*i)++;
+            }
+            else
+            {
+                if (append_var(input, i, buf, pos) < 0)
+                    return (-1);
+            }
+        }
+        else
+        {
+            buf[(*pos)++] = input[*i];
+            (*i)++;
+        }
+    }
+    if (input[*i] != '\"')
+    {
+        fprintf(stderr, "minishell: syntax error: unmatched \"\n");
+        return (-1);
+    }
+    (*i)++;
+    return (0);
 }
 
-/* Parse single-quoted segment; returns -1 on error */
 static int	parse_sq(const char *input, int *i, char *buf, int *pos)
 {
 	(*i)++;
@@ -92,24 +106,22 @@ static int	parse_sq(const char *input, int *i, char *buf, int *pos)
 	return (0);
 }
 
-/* Handle a quoted segment; returns -1 on error */
-static int	handle_quote(const char *input, int *i, char *buf, int *pos)
+static int handle_quote(const char *input, int *i, char *buf, int *pos, int last_exit_status)
 {
-	if (input[*i] == '\"')
-	{
-		if (parse_dq(input, i, buf, pos) < 0)
-			return (-1);
-	}
-	else if (input[*i] == '\'')
-	{
-		if (parse_sq(input, i, buf, pos) < 0)
-			return (-1);
-	}
-	return (0);
+    if (input[*i] == '\"')
+    {
+        if (parse_dq(input, i, buf, pos, last_exit_status) < 0)
+            return (-1);
+    }
+    else if (input[*i] == '\'')
+    {
+        if (parse_sq(input, i, buf, pos) < 0)
+            return (-1);
+    }
+    return (0);
 }
 
-/* Build one token with variable expansion; returns a new token or NULL on error */
-static char	*token_builder(const char *input, int *i)
+static char *token_builder(const char *input, int *i, int last_exit_status)
 {
 	int		pos;
 	int		buf_len;
@@ -122,13 +134,44 @@ static char	*token_builder(const char *input, int *i)
 		return (NULL);
 	while (input[*i] && !is_whitespace(input[*i]))
 	{
-		if (input[*i] == '$')
+		if (input[*i] == '>' || input[*i] == '<')
 		{
-			/* Check if next character is '?' */
+			if (pos > 0)
+				break;
+			buf[pos++] = input[*i];
+			if (input[*i + 1] == input[*i])
+			{
+				(*i)++;
+				buf[pos++] = input[*i];
+			}
+			(*i)++;
+			break;
+		}
+		else if (input[*i] == '|')
+		{
+			if (pos > 0)
+				break;
+			buf[pos++] = input[*i];
+			(*i)++;
+			break;
+		}
+		else if (input[*i] == '$')
+		{
 			if (input[*i + 1] == '?')
 			{
-				buf[pos++] = '$';
-				buf[pos++] = '?';
+				char *num = ft_itoa(last_exit_status);
+				if (!num)
+				{
+					free(buf);
+					return (NULL);
+				}
+				int k = 0;
+				while (num[k])
+				{
+					buf[pos++] = num[k];
+					k++;
+				}
+				free(num);
 				(*i) += 2;
 			}
 			else
@@ -143,7 +186,7 @@ static char	*token_builder(const char *input, int *i)
 		}
 		else if (input[*i] == '\"' || input[*i] == '\'')
 		{
-			if (handle_quote(input, i, buf, &pos) < 0)
+			if (handle_quote(input, i, buf, &pos, last_exit_status) < 0)
 			{
 				free(buf);
 				return (NULL);
@@ -159,18 +202,16 @@ static char	*token_builder(const char *input, int *i)
 	return (buf);
 }
 
-/* Returns one token from input */
-static char	*parse_token(const char *input, int *i)
+static char	*parse_token(const char *input, int *i, int last_exit_status)
 {
-	return (token_builder(input, i));
+	return token_builder(input, i, last_exit_status);
 }
 
-/* Count tokens and detect unmatched quotes; returns -1 on error */
-static int	count_tokens(const char *input)
+static int	count_tokens(const char *input, int last_exit_status)
 {
 	int	i;
 	int	count;
-	char	quote;
+	char	*token;
 
 	i = 0;
 	count = 0;
@@ -178,31 +219,20 @@ static int	count_tokens(const char *input)
 	{
 		while (input[i] && is_whitespace(input[i]))
 			i++;
-		if (input[i])
-		{
-			count++;
-			while (input[i] && !is_whitespace(input[i]))
-			{
-				if (input[i] == '\"' || input[i] == '\'')
-				{
-					quote = input[i];
-					i++;
-					while (input[i] && input[i] != quote)
-						i++;
-					if (input[i] != quote)
-						return (-1);
-					i++;
-				}
-				else
-					i++;
-			}
-		}
+		if (!input[i])
+			break;
+		token = token_builder(input, &i, last_exit_status);
+		if (!token)
+			return (-1);
+		count++;
+		free(token);
 	}
 	return (count);
 }
 
-/* Main parsing function; returns an array of tokens or NULL on error.
-   Each token is expanded for variables (including $?). */
+
+#include <unistd.h>
+
 char	**parse_input(const char *input, int last_exit_status)
 {
 	int		token_count;
@@ -211,10 +241,14 @@ char	**parse_input(const char *input, int last_exit_status)
 	int		t;
 	char	*tok;
 	char	**fixed_tokens;
+	(void)last_exit_status;
 
-	token_count = count_tokens(input);
+	token_count = count_tokens(input, last_exit_status);
 	if (token_count < 0)
+	{
+		write(2, "minishell: syntax error: unmatched quote\n", 41);
 		return (NULL);
+	}
 	tokens = malloc(sizeof(char *) * (token_count + 1));
 	if (!tokens)
 		return (NULL);
@@ -224,7 +258,7 @@ char	**parse_input(const char *input, int last_exit_status)
 		i++;
 	while (input[i])
 	{
-		tok = parse_token(input, &i);
+		tok = parse_token(input, &i, last_exit_status);
 		if (!tok)
 		{
 			while (t > 0)
@@ -235,19 +269,12 @@ char	**parse_input(const char *input, int last_exit_status)
 			free(tokens);
 			return (NULL);
 		}
-		{
-			char *expanded = expand_variables(tok, last_exit_status);
-			free(tok);
-			tok = expanded;
-		}
 		tokens[t++] = tok;
 		while (input[i] && is_whitespace(input[i]))
 			i++;
 	}
 	tokens[t] = NULL;
-	/* Now fix tokens that combine the here-doc operator and delimiter */
 	fixed_tokens = fix_here_doc_tokens(tokens);
-	/* Free the original tokens */
 	i = 0;
 	while (tokens[i])
 	{

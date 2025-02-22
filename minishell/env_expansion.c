@@ -11,7 +11,7 @@ static int	is_var_char(char c)
 	return (0);
 }
 
-static char	*ft_itoa(int n)
+char	*ft_itoa(int n)
 {
 	int		temp;
 	int		len;
@@ -63,6 +63,7 @@ char	*expand_variables(const char *str, int last_exit_status)
 	char	*res = malloc(len * 2 + 1);
 	char	*temp;
 	int		j;
+
 	if (!res)
 		return (NULL);
 	while (str[i])
@@ -123,4 +124,47 @@ char	*expand_variables(const char *str, int last_exit_status)
 	}
 	res[pos] = '\0';
 	return (res);
+}
+
+char	*remove_surrounding_quotes(const char *str)
+{
+	size_t	len;
+	char	*res;
+
+	if (!str)
+		return (NULL);
+	len = strlen(str);
+	if (len >= 2 && ((str[0] == '\'' && str[len - 1] == '\'') ||
+	    (str[0] == '\"' && str[len - 1] == '\"')))
+	{
+		res = strndup(str + 1, len - 2);
+		return (res);
+	}
+	return (strndup(str, len));
+}
+
+char	*process_token(const char *token, int last_exit_status)
+{
+	char	*tmp;
+	char	*res;
+	size_t	len;
+
+	if (!token)
+		return (NULL);
+	len = strlen(token);
+	if (len >= 2 && ((token[0] == '\'' && token[len - 1] == '\'') ||
+	    (token[0] == '\"' && token[len - 1] == '\"')))
+	{
+		tmp = remove_surrounding_quotes(token);
+		if (!tmp)
+			return (NULL);
+		if (token[0] == '\"')
+		{
+			res = expand_variables(tmp, last_exit_status);
+			free(tmp);
+			return (res);
+		}
+		return (tmp);
+	}
+	return (expand_variables(token, last_exit_status));
 }

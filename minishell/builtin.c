@@ -162,8 +162,60 @@ int	builtin_unset(char **args)
 	return (0);
 }
 
-int	builtin_exit(void)
+static int	is_digit(char c)
 {
-	exit(0);
-	return (0);
+	return (c >= '0' && c <= '9');
+}
+
+int	builtin_exit(char **args)
+{
+	int	argc = 0;
+	int	i;
+	int	neg;
+	long long num;
+	int	exit_code;
+	char	*err_msg;
+
+	while (args[argc])
+		argc++;
+	if (argc > 2)
+	{
+		err_msg = "exit: too many arguments\n";
+		write(2, err_msg, 27);
+		return (1);
+	}
+	if (argc == 1)
+		exit(0);
+	i = 0;
+	neg = 0;
+	if (args[1][0] == '-' || args[1][0] == '+')
+	{
+		if (args[1][0] == '-')
+			neg = 1;
+		i++;
+	}
+	if (!args[1][i])
+	{
+		err_msg = "exit: numeric argument required\n";
+		write(2, err_msg, 34);
+		exit(2);
+	}
+	num = 0;
+	while (args[1][i])
+	{
+		if (!is_digit(args[1][i]))
+		{
+			err_msg = "exit: numeric argument required\n";
+			write(2, err_msg, 34);
+			exit(2);
+		}
+		num = num * 10 + (args[1][i] - '0');
+		i++;
+	}
+	if (neg)
+		num = -num;
+	exit_code = (int)(num % 256);
+	if (exit_code < 0)
+		exit_code += 256;
+	exit(exit_code);
 }

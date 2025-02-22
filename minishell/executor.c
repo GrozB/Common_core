@@ -117,7 +117,7 @@ static char	*find_command_path(const char *cmd)
 	return (ft_strdup(cmd));
 }
 
-static int	is_builtin(char *cmd)
+int	is_builtin(char *cmd)
 {
 	if (!cmd)
 		return (0);
@@ -138,10 +138,10 @@ static int	is_builtin(char *cmd)
 	return (0);
 }
 
-static int	execute_builtin(t_command *cmd)
+int	execute_builtin(t_command *cmd)
 {
 	if (strcmp(cmd->args[0], "exit") == 0)
-		return (builtin_exit());
+		return (builtin_exit(cmd->args));
 	if (strcmp(cmd->args[0], "cd") == 0)
 		return (builtin_cd(cmd->args));
 	if (strcmp(cmd->args[0], "echo") == 0)
@@ -160,13 +160,13 @@ static int	execute_builtin(t_command *cmd)
 int	execute_command(t_command *cmd)
 {
 	pid_t	pid;
-	int		status;
+	int		status = 0;
 	int		fd_in;
 	int		fd_out;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (0);
-	if (is_builtin(cmd->args[0]))
+	if (is_builtin(cmd->args[0]) && !cmd->infile && !cmd->outfile && cmd->here_doc_fd == -1)
 		return (execute_builtin(cmd));
 	pid = fork();
 	if (pid < 0)
@@ -176,7 +176,6 @@ int	execute_command(t_command *cmd)
 	}
 	if (pid == 0)
 	{
-		/* Use here_doc_fd if set; it takes precedence over infile */
 		if (cmd->here_doc_fd != -1)
 		{
 			dup2(cmd->here_doc_fd, STDIN_FILENO);
@@ -207,6 +206,9 @@ int	execute_command(t_command *cmd)
 			dup2(fd_out, STDOUT_FILENO);
 			close(fd_out);
 		}
+		if (is_builtin(cmd->args[0]))
+			exit(execute_builtin(cmd));
+		else
 		{
 			char *cmd_path = find_command_path(cmd->args[0]);
 			if (!cmd_path)
@@ -223,9 +225,9 @@ int	execute_command(t_command *cmd)
 	else
 	{
 		waitpid(pid, &status, 0);
-		/* In the parent, ensure we close the here_doc_fd if it's still open */
 		if (cmd->here_doc_fd != -1)
 			close(cmd->here_doc_fd);
 	}
 	return (status);
 }
+
