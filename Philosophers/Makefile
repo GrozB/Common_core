@@ -1,18 +1,15 @@
-NAME = philosophers
-
-CC = cc
-CFLAGS = -Wall -Wextra -Werror -pthread
-
-SRCS = main.c src.c utils.c simulation.c
-OBJS = $(SRCS:.c=.o)
+NAME	= philo
+SRC		= philo.c ft_atoi.c simulation.c
+OBJ		= $(SRC:.c=.o)
+CFLAGS	= -Wall -Wextra -Werror -pthread
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+$(NAME): $(OBJ)
+	gcc $(CFLAGS) -o $(NAME) $(OBJ)
 
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJ)
 
 fclean: clean
 	rm -f $(NAME)
