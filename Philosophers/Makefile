@@ -1,5 +1,6 @@
 NAME	= philo
-SRC		= philo.c ft_atoi.c simulation.c
+SRC		= philo.c ft_atoi.c simulation.c main.c helpers.c philo_actions.c \
+			monitor.c init.c
 OBJ		= $(SRC:.c=.o)
 CFLAGS	= -Wall -Wextra -Werror -pthread
 
