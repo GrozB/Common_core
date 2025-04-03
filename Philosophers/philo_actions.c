@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 18:05:13 by bgroz             #+#    #+#             */
-/*   Updated: 2025/03/18 18:14:30 by bgroz            ###   ########.fr       */
+/*   Updated: 2025/04/03 19:51:03 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static void	eat_cycle(t_philo *p)
 	pthread_mutex_lock(&p->meal_mutex);
 	p->last_meal = get_time();
 	pthread_mutex_unlock(&p->meal_mutex);
-	ft_usleep(p->data->time_to_eat);
+	ft_usleep(p->data->time_to_eat, p->data);
 	pthread_mutex_unlock(p->left_fork);
 	pthread_mutex_unlock(p->right_fork);
 	pthread_mutex_lock(&p->meal_mutex);
@@ -85,7 +85,7 @@ static void	eat_cycle(t_philo *p)
 static void	sleep_and_think_cycle(t_philo *p)
 {
 	print_action(p, "is sleeping");
-	ft_usleep(p->data->time_to_sleep);
+	ft_usleep(p->data->time_to_sleep, p->data);
 	print_action(p, "is thinking");
 }
 
@@ -105,5 +105,6 @@ int	philo_cycle(t_philo *p)
 	}
 	eat_cycle(p);
 	sleep_and_think_cycle(p);
+	usleep(500);
 	return (0);
 }

@@ -7,7 +7,7 @@ CFLAGS	= -Wall -Wextra -Werror -pthread
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	gcc $(CFLAGS) -o $(NAME) $(OBJ)
+	cc $(CFLAGS) -o  $(NAME) $(OBJ)
 
 clean:
 	rm -f $(OBJ)

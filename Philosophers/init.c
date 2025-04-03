@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 18:07:43 by bgroz             #+#    #+#             */
-/*   Updated: 2025/03/18 18:32:31 by bgroz            ###   ########.fr       */
+/*   Updated: 2025/03/22 16:19:29 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	init_forks(t_data *data)
 		write(2, "Error: Fork allocation failed\n", 30);
 		return (1);
 	}
+	memset(data->forks, 0, sizeof(pthread_mutex_t) * data->num_philos);
 	i = 0;
 	while (i < data->num_philos)
 	{

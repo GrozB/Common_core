@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 18:26:16 by bgroz             #+#    #+#             */
-/*   Updated: 2025/03/18 18:30:40 by bgroz            ###   ########.fr       */
+/*   Updated: 2025/03/22 17:08:16 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdio.h>
 # include <stdlib.h>
+# include <string.h>
 # include <unistd.h>
 # include <pthread.h>
 # include <limits.h>
@@ -54,7 +55,7 @@ long long	get_time(void);
 int			start_simulation(t_data *data);
 void		cleanup_sim(t_data *data, t_philo *philos, pthread_mutex_t *forks);
 int			parse_args(int argc, char **argv, t_data *data);
-void		ft_usleep(long long time_in_ms);
+void		ft_usleep(long long time_in_ms, t_data *data);
 void		print_action(t_philo *philo, char *action);
 int			init_forks(t_data *data);
 int			init_mutexes(t_data *data);

@@ -6,7 +6,7 @@
 /*   By: bgroz <bgroz@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 18:32:41 by bgroz             #+#    #+#             */
-/*   Updated: 2025/03/18 18:32:42 by bgroz            ###   ########.fr       */
+/*   Updated: 2025/04/03 19:51:09 by bgroz            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,13 @@ void	*philosopher_routine(void *arg)
 	if (p->data->num_philos == 1)
 	{
 		print_action(p, "has taken a fork");
-		ft_usleep(p->data->time_to_die);
+		ft_usleep(p->data->time_to_die, p->data);
 		return (NULL);
 	}
-	while (1)
+	if (p->id % 2 != 0)
+		usleep(1000);
+	while (!get_stop(p->data)
+		&& (p->data->num_eat == -1 || p->meals_eaten < p->data->num_eat))
 	{
 		if (philo_cycle(p))
 			break ;
